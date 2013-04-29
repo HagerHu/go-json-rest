@@ -101,7 +101,7 @@ type Route struct {
 	PathExp string
 
 	// Code that will be executed when this route is taken.
-	Func func(*ResponseWriter, *Request)
+	Func func(*Response, *Request)
 }
 
 // Create a Route that points to an object method. It can be convenient to point to an object method instead
@@ -117,7 +117,7 @@ func RouteObjectMethod(httpMethod string, pathExp string, objectInstance interfa
 			value,
 		))
 	}
-	routeFunc := func(w *ResponseWriter, r *Request) {
+	routeFunc := func(w *Response, r *Request) {
 		funcValue.Call([]reflect.Value{
 			reflect.ValueOf(w),
 			reflect.ValueOf(r),
@@ -147,7 +147,7 @@ func (self *ResourceHandler) SetRoutes(routes ...Route) error {
 			Route{
 				HttpMethod: "GET",
 				PathExp:    "/.status",
-				Func: func(writer *ResponseWriter, request *Request) {
+				Func: func(writer *Response, request *Request) {
 					self.statusService.getStatus(writer, request)
 				},
 			},

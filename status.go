@@ -46,7 +46,7 @@ type status struct {
 	AverageResponseTimeSec float64
 }
 
-func (self *statusService) getStatus(w *ResponseWriter, r *Request) {
+func (self *statusService) getStatus(w *Response, r *Request) {
 
 	now := time.Now()
 
