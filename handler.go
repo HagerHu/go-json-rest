@@ -251,7 +251,7 @@ func (self *ResourceHandler) ServeHTTP(origWriter http.ResponseWriter, origReque
 
 	isIndented := !self.DisableJsonIndent
 
-	writer := ResponseWriter{
+	writer := Response{
 		origWriter,
 		isGzipped,
 		isIndented,
