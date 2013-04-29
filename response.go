@@ -8,7 +8,7 @@ import (
 
 // Inherit from an object implementing the http.ResponseWriter interface,
 // and provide additional methods.
-type ResponseWriter struct {
+type Response struct {
 	http.ResponseWriter
 	isGzipped   bool
 	isIndented  bool
@@ -18,7 +18,7 @@ type ResponseWriter struct {
 
 // Overloading of the http.ResponseWriter method.
 // Just record the status code for logging.
-func (self *ResponseWriter) WriteHeader(code int) {
+func (self *Response) WriteHeader(code int) {
 	self.ResponseWriter.WriteHeader(code)
 	self.statusCode = code
 	self.wroteHeader = true
@@ -26,7 +26,7 @@ func (self *ResponseWriter) WriteHeader(code int) {
 
 // Overloading of the http.ResponseWriter method.
 // Provide additional capabilities, like transparent gzip encoding.
-func (self *ResponseWriter) Write(b []byte) (int, error) {
+func (self *Response) Write(b []byte) (int, error) {
 
 	if self.isGzipped {
 		self.Header().Set("Content-Encoding", "gzip")
@@ -47,7 +47,7 @@ func (self *ResponseWriter) Write(b []byte) (int, error) {
 
 // Encode the object in JSON, set the content-type header,
 // and call Write.
-func (self *ResponseWriter) WriteJson(v interface{}) error {
+func (self *Response) WriteJson(v interface{}) error {
 	self.Header().Set("content-type", "application/json")
 	var b []byte
 	var err error
@@ -66,7 +66,7 @@ func (self *ResponseWriter) WriteJson(v interface{}) error {
 // Produce an error response in JSON with the following structure, '{"Error":"My error message"}'
 // The standard plain text net/http Error helper can still be called like this:
 // http.Error(w, "error message", code)
-func Error(w *ResponseWriter, error string, code int) {
+func Error(w *Response, error string, code int) {
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(code)
 	err := w.WriteJson(map[string]string{"Error": error})
@@ -78,6 +78,6 @@ func Error(w *ResponseWriter, error string, code int) {
 // Produce a 404 response with the following JSON, '{"Error":"Resource not found"}'
 // The standard plain text net/http NotFound helper can still be called like this:
 // http.NotFound(w, r.Request)
-func NotFound(w *ResponseWriter, r *Request) {
+func NotFound(w *Response, r *Request) {
 	Error(w, "Resource not found", http.StatusNotFound)
 }
