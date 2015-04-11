@@ -48,7 +48,7 @@ func (self *Response) Write(b []byte) (int, error) {
 // Encode the object in JSON, set the content-type header,
 // and call Write.
 func (self *Response) WriteJson(v interface{}) error {
-	self.Header().Set("content-type", "application/json")
+	self.Header().Set("content-type", "application/json; charset=utf-8")
 	var b []byte
 	var err error
 	if self.isIndented {
